@@ -8,25 +8,29 @@ import java.util.Scanner;
 
 public class Gerenciamento extends Moto {
 
-    public static void cadastrarMoto() {
+    public static Moto inserirDadosMotos() {
         Scanner sc = new Scanner(System.in);
         Moto moto = new Moto();
 
         System.out.println("Marca: ");
-        String marca = sc.nextLine();
-        moto.setMarca(marca);
+        moto.setMarca(sc.nextLine());
 
         System.out.println("Modelo: ");
-        String modelo = sc.nextLine();
-        moto.setModelo(modelo);
+        moto.setModelo(sc.nextLine());
 
         System.out.println("Cor: ");
-        String cor = sc.nextLine();
-        moto.setCor(cor);
+        moto.setCor(sc.nextLine());
 
         System.out.println("Ano: ");
-        int ano = sc.nextInt();
-        moto.setAno(ano);
+        moto.setAno(sc.nextInt());
+
+        return moto;
+
+    }
+
+    public static void cadastrarMoto() {
+
+        Moto moto = inserirDadosMotos();
 
         String url = "INSERT INTO moto (marca,modelo,cor,ano) VALUES (?,?,?,?)";
 
@@ -54,7 +58,7 @@ public class Gerenciamento extends Moto {
         }
     }
 
-    public static List<Moto> consultarMoto() {
+    public static List<Moto> listarMotos() {
         String sql = "SELECT * FROM moto";
         List<Moto> motos = null;
 
@@ -62,31 +66,134 @@ public class Gerenciamento extends Moto {
 
         try {
 
-            Statement statement = connection.createStatement();
+            PreparedStatement myStmt = connection.prepareStatement(sql);
 
-            ResultSet rs = statement.executeQuery(sql);
+            ResultSet result = myStmt.executeQuery();
 
             motos = new ArrayList<>();
 
-            while (rs.next()) {
+            while (result.next()) {
 
                 Moto moto = new Moto();
-                moto.setId(rs.getInt("id"));
-                moto.setMarca(rs.getString("marca"));
-                moto.setModelo(rs.getString("modelo"));
-                moto.setCor(rs.getString("cor"));
-                moto.setAno(rs.getInt("ano"));
+                moto.setId(result.getInt("id"));
+                moto.setMarca(result.getString("marca"));
+                moto.setModelo(result.getString("modelo"));
+                moto.setCor(result.getString("cor"));
+                moto.setAno(result.getInt("ano"));
 
                 motos.add(moto);
 
             }
 
-            statement.close();
+            myStmt.close();
             connection.close();
-            rs.close();
+            result.close();
         } catch (SQLException e) {
-            System.out.println("Erro: " + e);
+            System.out.println("Erro ao listar motos: " + e);
         }
         return motos;
+    }
+
+    public static void consultarMoto() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Informe o ID da moto a ser consultada: ");
+        int id = sc.nextInt();
+
+        String sql = "SELECT * FROM moto WHERE id = ?";
+
+        Connection connection = ConnectionFactory.getConnection();
+
+        try {
+            PreparedStatement myStmt = connection.prepareStatement(sql);
+
+            myStmt.setInt(1, id);
+
+            ResultSet result = myStmt.executeQuery();
+
+            while (result.next()) {
+                System.out.println("\nMoto = {\n\tid: " + result.getInt("id")
+                        + "\n\tmarca: " + result.getString("marca")
+                        + "\n\tmodelo: " + result.getString("modelo")
+                        + "\n\tcor: " + result.getString("cor")
+                        + "\n\tano: " + result.getInt("ano") + "\n}");
+            }
+
+            myStmt.close();
+            connection.close();
+            result.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao consultar moto: " + e);
+        }
+
+    }
+
+    public static void atualizarMoto() {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Informe o ID da moto a ser atualizada: ");
+        int id = sc.nextInt();
+
+        Moto moto = inserirDadosMotos();
+        moto.setId(id);
+
+        String sql = "UPDATE moto SET marca = ?, modelo = ?, cor = ?, ano = ? WHERE id = ?";
+
+        Connection connection = ConnectionFactory.getConnection();
+
+        try {
+
+            PreparedStatement myStmt = connection.prepareStatement(sql);
+
+            myStmt.setString(1, moto.getMarca());
+            myStmt.setString(2, moto.getModelo());
+            myStmt.setString(3, moto.getCor());
+            myStmt.setInt(4, moto.getAno());
+            myStmt.setInt(5, moto.getId());
+
+            int result = myStmt.executeUpdate();
+
+            if (result != 0) {
+                System.out.println("\nInformações atualizadas com sucesso!\nNovos dados: ");
+                System.out.println("\nMoto = \n\tmarca: " + moto.getMarca()
+                        + "\n\tmodelo: " + moto.getModelo()
+                        + "\n\tcor: " + moto.getCor()
+                        + "\n\tano: " + moto.getAno() + "\n}");
+
+            }
+            connection.close();
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar produto: " + e);
+        }
+    }
+
+    public static void exluirMoto() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Informe o ID da moto a ser excluida: ");
+        int id = sc.nextInt();
+
+        String sql = "DELETE FROM moto WHERE id = ?";
+
+        Connection connection = ConnectionFactory.getConnection();
+
+        try {
+
+            PreparedStatement myStmt = connection.prepareStatement(sql);
+
+            myStmt.setInt(1, id);
+
+            int result = myStmt.executeUpdate();
+            if (result != 0) {
+                System.out.println("Cadastro excluido com sucesso!");
+            }
+
+            myStmt.close();
+            connection.close();
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao exluir: " + e);
+        }
     }
 }

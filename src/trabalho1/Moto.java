@@ -62,7 +62,7 @@ public class Moto {
 
     @Override
     public String toString() {
-        return "\nMoto {\n\tid: " + id + ", \n\tcor: " + cor + ", \n\tmarca: " + marca + ", \n\tmodelo: " + modelo + ",\n\tano: " + ano + "\n}";
+        return "\nMoto {\n\tid: " + id + ", \n\tmarca: " + marca + ", \n\tmodelo: " + modelo + "\n}";
     }
 
 }
