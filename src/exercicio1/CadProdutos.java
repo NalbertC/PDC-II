@@ -1,9 +1,6 @@
 package exercicio1;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,13 +48,14 @@ public class CadProdutos {
         Connection connection = ConnectionFactory.getConnection();
 
         try {
-            try ( Statement statement = connection.createStatement()) {
-                int result = statement.executeUpdate(sql);
 
-                if (result != 0) {
-                    System.out.println("Produto atualizado com sucesso!");
-                }
+            Statement statement = connection.createStatement();
+            int result = statement.executeUpdate(sql);
+
+            if (result != 0) {
+                System.out.println("Produto atualizado com sucesso!");
             }
+
             connection.close();
 
         } catch (SQLException e) {
