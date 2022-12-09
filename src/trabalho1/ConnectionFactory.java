@@ -4,6 +4,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/*
+CREATE SCHEMA bd_gestao_motos;
+
+USE bd_gestao_motos;
+
+CREATE TABLE moto(
+	id INT NOT NULL AUTO_INCREMENT,
+	marca VARCHAR(20) NOT NULL,
+	modelo VARCHAR(50)NOT NULL,
+	cor VARCHAR(20) NOT NULL,
+	ano INT(4) NOT NULL,
+	PRIMARY KEY(id));
+
+ */
 public class ConnectionFactory {
 
     public static Connection getConnection() {
