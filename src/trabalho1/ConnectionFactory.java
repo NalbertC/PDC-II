@@ -1,8 +1,7 @@
 package trabalho1;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
+
 
 /*
 CREATE SCHEMA bd_gestao_motos;
@@ -16,8 +15,8 @@ CREATE TABLE moto(
 	cor VARCHAR(20) NOT NULL,
 	ano INT(4) NOT NULL,
 	PRIMARY KEY(id));
-
  */
+
 public class ConnectionFactory {
 
     public static Connection getConnection() {

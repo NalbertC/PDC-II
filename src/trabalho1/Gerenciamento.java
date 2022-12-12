@@ -1,6 +1,5 @@
 package trabalho1;
 
-import exercicio1.Produto;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,8 +158,8 @@ public class Gerenciamento extends Moto {
                         + "\n\tmodelo: " + moto.getModelo()
                         + "\n\tcor: " + moto.getCor()
                         + "\n\tano: " + moto.getAno() + "\n}");
-
             }
+
             connection.close();
 
         } catch (SQLException e) {
