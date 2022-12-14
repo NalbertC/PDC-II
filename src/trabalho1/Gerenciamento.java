@@ -5,31 +5,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Gerenciamento extends Moto {
-
-    public static Moto inserirDadosMotos() {
-        Scanner sc = new Scanner(System.in);
-        Moto moto = new Moto();
-
-        System.out.println("Marca: ");
-        moto.setMarca(sc.nextLine());
-
-        System.out.println("Modelo: ");
-        moto.setModelo(sc.nextLine());
-
-        System.out.println("Cor: ");
-        moto.setCor(sc.nextLine());
-
-        System.out.println("Ano: ");
-        moto.setAno(sc.nextInt());
-
-        return moto;
-
-    }
+public class Gerenciamento {
 
     public static void cadastrarMoto() {
 
-        Moto moto = inserirDadosMotos();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Digite a marca da moto: ");
+        String marca = sc.nextLine();
+        System.out.println("Digite o modelo da moto: ");
+        String modelo = sc.nextLine();
+        System.out.println("Digite a cor da moto: ");
+        String cor = sc.nextLine();
+        System.out.println("Digite o ano da moto: ");
+        int ano = sc.nextInt();
+        sc.nextLine();
+
+        Moto moto = new Moto.MotoBuilder()
+                .marca(marca)
+                .modelo(modelo)
+                .cor(cor)
+                .ano(ano)
+                .build();
 
         String url = "INSERT INTO moto (marca,modelo,cor,ano) VALUES (?,?,?,?)";
 
@@ -73,12 +69,13 @@ public class Gerenciamento extends Moto {
 
             while (result.next()) {
 
-                Moto moto = new Moto();
-                moto.setId(result.getInt("id"));
-                moto.setMarca(result.getString("marca"));
-                moto.setModelo(result.getString("modelo"));
-                moto.setCor(result.getString("cor"));
-                moto.setAno(result.getInt("ano"));
+                Moto moto = new Moto.MotoBuilder()
+                        .id(result.getInt("id"))
+                        .marca(result.getString("marca"))
+                        .modelo(result.getString("modelo"))
+                        .cor(result.getString("cor"))
+                        .ano(result.getInt("ano"))
+                        .build();
 
                 motos.add(moto);
 
@@ -94,6 +91,7 @@ public class Gerenciamento extends Moto {
     }
 
     public static void consultarMoto() {
+
         Scanner sc = new Scanner(System.in);
         System.out.println("Informe o ID da moto a ser consultada: ");
         int id = sc.nextInt();
@@ -132,9 +130,16 @@ public class Gerenciamento extends Moto {
 
         System.out.println("Informe o ID da moto a ser atualizada: ");
         int id = sc.nextInt();
-
-        Moto moto = inserirDadosMotos();
-        moto.setId(id);
+        sc.nextLine();
+        System.out.println("Digite a marca da moto: ");
+        String marca = sc.nextLine();
+        System.out.println("Digite o modelo da moto: ");
+        String modelo = sc.nextLine();
+        System.out.println("Digite a cor da moto: ");
+        String cor = sc.nextLine();
+        System.out.println("Digite o ano da moto: ");
+        int ano = sc.nextInt();
+        sc.nextLine();
 
         String sql = "UPDATE moto SET marca = ?, modelo = ?, cor = ?, ano = ? WHERE id = ?";
 
@@ -144,20 +149,20 @@ public class Gerenciamento extends Moto {
 
             PreparedStatement myStmt = connection.prepareStatement(sql);
 
-            myStmt.setString(1, moto.getMarca());
-            myStmt.setString(2, moto.getModelo());
-            myStmt.setString(3, moto.getCor());
-            myStmt.setInt(4, moto.getAno());
-            myStmt.setInt(5, moto.getId());
+            myStmt.setString(1, marca);
+            myStmt.setString(2, modelo);
+            myStmt.setString(3, cor);
+            myStmt.setInt(4, ano);
+            myStmt.setInt(5, id);
 
             int result = myStmt.executeUpdate();
 
             if (result != 0) {
                 System.out.println("\nInformações atualizadas com sucesso!\nNovos dados: ");
-                System.out.println("\nMoto = \n\tmarca: " + moto.getMarca()
-                        + "\n\tmodelo: " + moto.getModelo()
-                        + "\n\tcor: " + moto.getCor()
-                        + "\n\tano: " + moto.getAno() + "\n}");
+                System.out.println("\nMoto = \n\tmarca: " + marca
+                        + "\n\tmodelo: " + modelo
+                        + "\n\tcor: " + cor
+                        + "\n\tano: " + ano + "\n}");
             }
 
             connection.close();
